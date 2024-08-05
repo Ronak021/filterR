@@ -22,7 +22,7 @@ FilterR is a web application for displaying and manipulating data in a table for
 
 1. **Clone the Repository**
     ```bash
-    git clone [https://github.com/Ronak021/BlinkBrief.git](https://github.com/Ronak021/filterR.git)
+    git clone https://github.com/Ronak021/filterR.git
     ```
 
 2. **Navigate to the Project Directory**
