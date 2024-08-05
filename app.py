@@ -50,84 +50,262 @@ data = [
     {"id": 12, "name": "Leo Green", "age": 27, "role": "Designer", "hireDate": "2021-01-30", "isActive": True, "salary": 68000, "department": "Design", "projectsCompleted": 3, "lastLogin": "2024-07-28T16:15:00.000Z", "accessLevel": "User"},
     {"id": 13, "name": "Mona Blue", "age": 36, "role": "Engineer", "hireDate": "2019-11-18", "isActive": True, "salary": 87000, "department": "Development", "projectsCompleted": 11, "lastLogin": "2024-07-30T14:50:00.000Z", "accessLevel": "User"},
     {"id": 14, "name": "Nina Brown", "age": 25, "role": "Intern", "hireDate": "2023-04-14", "isActive": True, "salary": 42000, "department": "Development", "projectsCompleted": 2, "lastLogin": "2024-07-31T11:00:00.000Z", "accessLevel": "User"},
-    {"id": 15, "name": "Oscar White", "age": 42, "role": "Director", "hireDate": "2016-05-11", "isActive": True, "salary": 125000, "department": "Management", "projectsCompleted": 22, "lastLogin": "2024-07-29T09:33:00.000Z", "accessLevel": "Admin"}
+    {"id": 15, "name": "Oscar White", "age": 42, "role": "Director", "hireDate": "2016-05-11", "isActive": True, "salary": 125000, "department": "Management", "projectsCompleted": 22, "lastLogin": "2024-07-29T09:33:00.000Z", "accessLevel": "Admin"},
+    {"id": 16, "name": "Oscar White", "age": 42, "role": "Director", "hireDate": "2016-05-11", "isActive": None, "salary": 125000, "department": "Management", "projectsCompleted": 22, "lastLogin": "2024-07-29T09:33:00.000Z", "accessLevel": "Admin"}
 ]
+
+
+
+def sort_data(data, col_name, sort_order):
+    if col_name not in data[0]:
+        return data
+    
+    return sorted(data, key=lambda x: x[col_name], reverse=(sort_order == 'desc'))
+
+
+def search_data(data, search_term):
+    if not search_term:
+        return data
+    
+    search_term = search_term.lower()
+    return [item for item in data if any(search_term in str(value).lower() for value in item.values())]
 
 @app.route('/')
 def index():
     # Get filter parameters
     filter_type = request.args.get('filter-type')
-    column_name = request.args.get('column-name')
-    filter_value = request.args.get('filter-value')
-    filter_condition = request.args.get('filter-condition')
+    col_name = request.args.get('column-name')
+    fil_val = request.args.get('filter-value')
+    fil_cond = request.args.get('filter-condition')
+    sort_by = request.args.get('sort-by')
+    sort_col = request.args.get('column-name')
+    search_term = request.args.get('search')
 
-    filtered_data = data
+    fil_data = data
 
-
-    if filter_type and column_name:
+    if filter_type and col_name:
         if filter_type == 'integer':
             try:
-                filter_value = int(filter_value)
-                if column_name == 'age':
-                    if filter_condition == 'equals':
-                        filtered_data = [item for item in filtered_data if item['age'] == filter_value]
-                    elif filter_condition == 'lessThan':
-                        filtered_data = [item for item in filtered_data if item['age'] < filter_value]
-                    elif filter_condition == 'lessThanOrEqual':
-                        filtered_data = [item for item in filtered_data if item['age'] <= filter_value]
-                    elif filter_condition == 'greaterThan':
-                        filtered_data = [item for item in filtered_data if item['age'] > filter_value]
-                    elif filter_condition == 'greaterThanOrEqual':
-                        filtered_data = [item for item in filtered_data if item['age'] >= filter_value]
-                    elif filter_condition == 'range':
-                        range_values = filter_value.split(',')
+                fil_val = int(fil_val)
+                if col_name == 'age':
+                    if fil_cond == 'equals':
+                        fil_data = [item for item in fil_data if item['age'] == fil_val]
+                    elif fil_cond == 'lessThan':
+                        fil_data = [item for item in fil_data if item['age'] < fil_val]
+                    elif fil_cond == 'lessThanOrEqual':
+                        fil_data = [item for item in fil_data if item['age'] <= fil_val]
+                    elif fil_cond == 'greaterThan':
+                        fil_data = [item for item in fil_data if item['age'] > fil_val]
+                    elif fil_cond == 'greaterThanOrEqual':
+                        fil_data = [item for item in fil_data if item['age'] >= fil_val]
+                    elif fil_cond == 'range':
+                        range_values = fil_val.split(',')
                         if len(range_values) == 2:
                             start, end = map(int, range_values)
-                            filtered_data = [item for item in filtered_data if start <= item['age'] <= end]
-                    elif filter_condition == 'notEqual':
-                        filtered_data = [item for item in filtered_data if item['age'] != filter_value]
-             
+                            fil_data = [item for item in fil_data if start <= item['age'] <= end]
+                    elif fil_cond == 'notEqual':
+                        fil_data = [item for item in fil_data if item['age'] != fil_val]
+                
+                elif col_name == 'salary':
+                    if fil_cond == 'equals':
+                        fil_data = [item for item in fil_data if item['salary'] == fil_val]
+                    elif fil_cond == 'lessThan':
+                        fil_data = [item for item in fil_data if item['salary'] < fil_val]
+                    elif fil_cond == 'lessThanOrEqual':
+                        fil_data = [item for item in fil_data if item['salary'] <= fil_val]
+                    elif fil_cond == 'greaterThan':
+                        fil_data = [item for item in fil_data if item['salary'] > fil_val]
+                    elif fil_cond == 'greaterThanOrEqual':
+                        fil_data = [item for item in fil_data if item['salary'] >= fil_val]
+                    elif fil_cond == 'range':
+                        range_values = fil_val.split(',')
+                        if len(range_values) == 2:
+                            start, end = map(int, range_values)
+                            fil_data = [item for item in fil_data if start <= item['salary'] <= end]
+                    elif fil_cond == 'notEqual':
+                        fil_data = [item for item in fil_data if item['salary'] != fil_val]
+                
+                elif col_name == 'projectsCompleted':
+                    if fil_cond == 'equals':
+                        fil_data = [item for item in fil_data if item['projectsCompleted'] == fil_val]
+                    elif fil_cond == 'lessThan':
+                        fil_data = [item for item in fil_data if item['projectsCompleted'] < fil_val]
+                    elif fil_cond == 'lessThanOrEqual':
+                        fil_data = [item for item in fil_data if item['projectsCompleted'] <= fil_val]
+                    elif fil_cond == 'greaterThan':
+                        fil_data = [item for item in fil_data if item['projectsCompleted'] > fil_val]
+                    elif fil_cond == 'greaterThanOrEqual':
+                        fil_data = [item for item in fil_data if item['projectsCompleted'] >= fil_val]
+                    elif fil_cond == 'range':
+                        range_values = fil_val.split(',')
+                        if len(range_values) == 2:
+                            start, end = map(int, range_values)
+                            fil_data = [item for item in fil_data if start <= item['projectsCompleted'] <= end]
+                    elif fil_cond == 'notEqual':
+                        fil_data = [item for item in fil_data if item['projectsCompleted'] != fil_val]
+                
+                elif col_name == 'id':
+                    if fil_cond == 'equals':
+                        fil_data = [item for item in fil_data if item['id'] == fil_val]
+                    elif fil_cond == 'lessThan':
+                        fil_data = [item for item in fil_data if item['id'] < fil_val]
+                    elif fil_cond == 'lessThanOrEqual':
+                        fil_data = [item for item in fil_data if item['id'] <= fil_val]
+                    elif fil_cond == 'greaterThan':
+                        fil_data = [item for item in fil_data if item['id'] > fil_val]
+                    elif fil_cond == 'greaterThanOrEqual':
+                        fil_data = [item for item in fil_data if item['id'] >= fil_val]
+                    elif fil_cond == 'range':
+                        range_values = fil_val.split(',')
+                        if len(range_values) == 2:
+                            start, end = map(int, range_values)
+                            fil_data = [item for item in fil_data if start <= item['id'] <= end]
+                    elif fil_cond == 'notEqual':
+                        fil_data = [item for item in fil_data if item['id'] != fil_val]
 
             except ValueError:
                 pass
 
         elif filter_type == 'string':
-            if column_name == 'name':
-                if filter_condition == 'contains':
-                    filtered_data = [item for item in filtered_data if filter_value in item['name']]
-                elif filter_condition == 'notContains':
-                    filtered_data = [item for item in filtered_data if filter_value not in item['name']]
-                elif filter_condition == 'equals':
-                    filtered_data = [item for item in filtered_data if item['name'] == filter_value]
-                elif filter_condition == 'notEqual':
-                    filtered_data = [item for item in filtered_data if item['name'] != filter_value]
-                elif filter_condition == 'startsWith':
-                    filtered_data = [item for item in filtered_data if item['name'].startswith(filter_value)]
-                elif filter_condition == 'endsWith':
-                    filtered_data = [item for item in filtered_data if item['name'].endswith(filter_value)]
-                elif filter_condition == 'isNull':
-                    filtered_data = [item for item in filtered_data if item['name'] is None]
-                elif filter_condition == 'isNotNull':
-                    filtered_data = [item for item in filtered_data if item['name'] is not None]
-          
+            if col_name == 'name':
+                if fil_cond == 'contains':
+                    fil_data = [item for item in fil_data if fil_val in item['name']]
+                elif fil_cond == 'notContains':
+                    fil_data = [item for item in fil_data if fil_val not in item['name']]
+                elif fil_cond == 'equals':
+                    fil_data = [item for item in fil_data if item['name'] == fil_val]
+                elif fil_cond == 'notEqual':
+                    fil_data = [item for item in fil_data if item['name'] != fil_val]
+                elif fil_cond == 'startsWith':
+                    fil_data = [item for item in fil_data if item['name'].startswith(fil_val)]
+                elif fil_cond == 'endsWith':
+                    fil_data = [item for item in fil_data if item['name'].endswith(fil_val)]
+                elif fil_cond == 'isNull':
+                    fil_data = [item for item in fil_data if item['name'] is None]
+                elif fil_cond == 'isNotNull':
+                    fil_data = [item for item in fil_data if item['name'] is not None]
+            
+            elif col_name == 'role':
+                if fil_cond == 'contains':
+                    fil_data = [item for item in fil_data if fil_val in item['role']]
+                elif fil_cond == 'notContains':
+                    fil_data = [item for item in fil_data if fil_val not in item['role']]
+                elif fil_cond == 'equals':
+                    fil_data = [item for item in fil_data if item['role'] == fil_val]
+                elif fil_cond == 'notEqual':
+                    fil_data = [item for item in fil_data if item['role'] != fil_val]
+                elif fil_cond == 'startsWith':
+                    fil_data = [item for item in fil_data if item['role'].startswith(fil_val)]
+                elif fil_cond == 'endsWith':
+                    fil_data = [item for item in fil_data if item['role'].endswith(fil_val)]
+                elif fil_cond == 'isNull':
+                    fil_data = [item for item in fil_data if item['role'] is None]
+                elif fil_cond == 'isNotNull':
+                    fil_data = [item for item in fil_data if item['role'] is not None]
+                
+            elif col_name == 'department':
+                if fil_cond == 'contains':
+                    fil_data = [item for item in fil_data if fil_val in item['department']]
+                elif fil_cond == 'notContains':
+                    fil_data = [item for item in fil_data if fil_val not in item['department']]
+                elif fil_cond == 'equals':
+                    fil_data = [item for item in fil_data if item['department'] == fil_val]
+                elif fil_cond == 'notEqual':
+                    fil_data = [item for item in fil_data if item['department'] != fil_val]
+                elif fil_cond == 'startsWith':
+                    fil_data = [item for item in fil_data if item['department'].startswith(fil_val)]
+                elif fil_cond == 'endsWith':
+                    fil_data = [item for item in fil_data if item['department'].endswith(fil_val)]
+                elif fil_cond == 'isNull':
+                    fil_data = [item for item in fil_data if item['department'] is None]
+                elif fil_cond == 'isNotNull':
+                    fil_data = [item for item in fil_data if item['department'] is not None]
+            
+            elif col_name == 'accessLevel':
+                if fil_cond == 'contains':
+                    fil_data = [item for item in fil_data if fil_val in item['accessLevel']]
+                elif fil_cond == 'notContains':
+                    fil_data = [item for item in fil_data if fil_val not in item['accessLevel']]
+                elif fil_cond == 'equals':
+                    fil_data = [item for item in fil_data if item['accessLevel'] == fil_val]
+                elif fil_cond == 'notEqual':
+                    fil_data = [item for item in fil_data if item['accessLevel'] != fil_val]
+                elif fil_cond == 'startsWith':
+                    fil_data = [item for item in fil_data if item['accessLevel'].startswith(fil_val)]
+                elif fil_cond == 'endsWith':
+                    fil_data = [item for item in fil_data if item['accessLevel'].endswith(fil_val)]
+                elif fil_cond == 'isNull':
+                    fil_data = [item for item in fil_data if item['accessLevel'] is None]
+                elif fil_cond == 'isNotNull':
+                    fil_data = [item for item in fil_data if item['accessLevel'] is not None]
+
+            elif col_name == 'lastLogin':
+                if fil_cond == 'contains':
+                    fil_data = [item for item in fil_data if fil_val in item['lastLogin']]
+                elif fil_cond == 'notContains':
+                    fil_data = [item for item in fil_data if fil_val not in item['lastLogin']]
+                elif fil_cond == 'equals':
+                    fil_data = [item for item in fil_data if item['lastLogin'] == fil_val]
+                elif fil_cond == 'notEqual':
+                    fil_data = [item for item in fil_data if item['lastLogin'] != fil_val]
+                elif fil_cond == 'startsWith':
+                    fil_data = [item for item in fil_data if item['lastLogin'].startswith(fil_val)]
+                elif fil_cond == 'endsWith':
+                    fil_data = [item for item in fil_data if item['lastLogin'].endswith(fil_val)]
+                elif fil_cond == 'isNull':
+                    fil_data = [item for item in fil_data if item['lastLogin'] is None]
+                elif fil_cond == 'isNotNull':
+                    fil_data = [item for item in fil_data if item['lastLogin'] is not None]
 
         elif filter_type == 'date':
-            pass
+            from datetime import datetime
+            try:
+                fil_val = datetime.strptime(fil_val, '%Y-%m-%d')
+                if col_name == 'hireDate':
+                    if fil_cond == 'equals':
+                        fil_data = [item for item in fil_data if datetime.strptime(item['hireDate'], '%Y-%m-%d') == fil_val]
+                    elif fil_cond == 'lessThan':
+                        fil_data = [item for item in fil_data if datetime.strptime(item['hireDate'], '%Y-%m-%d') < fil_val]
+                    elif fil_cond == 'lessThanOrEqual':
+                        fil_data = [item for item in fil_data if datetime.strptime(item['hireDate'], '%Y-%m-%d') <= fil_val]
+                    elif fil_cond == 'greaterThan':
+                        fil_data = [item for item in fil_data if datetime.strptime(item['hireDate'], '%Y-%m-%d') > fil_val]
+                    elif fil_cond == 'greaterThanOrEqual':
+                        fil_data = [item for item in fil_data if datetime.strptime(item['hireDate'], '%Y-%m-%d') >= fil_val]
+                    elif fil_cond == 'dateRange':
+                        range_values = fil_val.split(',')
+                        if len(range_values) == 2:
+                            start, end = [datetime.strptime(date_str, '%Y-%m-%d') for date_str in range_values]
+                            fil_data = [item for item in fil_data if start <= datetime.strptime(item['hireDate'], '%Y-%m-%d') <= end]
+                    elif fil_cond == 'notEqual':
+                        fil_data = [item for item in fil_data if datetime.strptime(item['hireDate'], '%Y-%m-%d') != fil_val]
+                    elif fil_cond == 'isNull':
+                        fil_data = [item for item in fil_data if item['hireDate'] is None]
+                    elif fil_cond == 'isNotNull':
+                        fil_data = [item for item in fil_data if item['hireDate'] is not None]
+            except ValueError:
+                pass
 
         elif filter_type == 'boolean':
-            if column_name == 'isActive':
-                if filter_condition == 'equals':
-                    filtered_data = [item for item in filtered_data if item['isActive'] == (filter_value.lower() == 'true')]
-                elif filter_condition == 'isNull':
-                    filtered_data = [item for item in filtered_data if item['isActive'] is None]
-                elif filter_condition == 'isNotNull':
-                    filtered_data = [item for item in filtered_data if item['isActive'] is not None]
-         
+            if col_name == 'isActive':
+                if fil_cond == 'equals':
+                    fil_data = [item for item in fil_data if item['isActive'] == (fil_val.lower() == 'true')]
+                elif fil_cond == 'isNull':
+                    fil_data = [item for item in fil_data if item['isActive'] is None]
+                elif fil_cond == 'isNotNull':
+                    fil_data = [item for item in fil_data if item['isActive'] is not None]
 
-    return render_template('index.html', data=filtered_data)
+
+     # Search data
+    fil_data = search_data(fil_data, search_term)
+
+    if sort_col:
+        fil_data = sort_data(fil_data, sort_col, sort_by)
+    return render_template('index.html', data=fil_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
    

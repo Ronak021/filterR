@@ -3,53 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Table with Filters</title>
+    <title>FilterR</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body class="p-8">
-    <h1 class="text-2xl font-bold mb-4">Data Table with Filters</h1>
+    <h1 class="text-2xl font-bold mb-4" >FilterR - Data Table with Filters, Sorting, and Search</h1>
 
-    <!-- Filter Form -->
+
     <form id="filter-form" method="GET" action="/">
-        <label for="filter-type" class="block">Filter Type:</label>
-        <select id="filter-type" name="filter-type" class="mb-2">
-            <option value="">Select Filter Type</option>
-            <option value="integer">Integer</option>
-            <option value="string">String</option>
-            <option value="date">Date</option>
-            <option value="boolean">Boolean</option>
-        </select>
+        <div class="search-container mb-4">
+            <label for="search" class="block">Search:</label>
+            <input type="text" id="search" name="search" class="w-full" placeholder="Search across columns" />
+        </div>
 
-        <label for="column-name" class="block">Column Name:</label>
-        <select id="column-name" name="column-name" class="mb-2">
-     
-        </select>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="filter-type">Filter Type:</label>
+                <select id="filter-type" name="filter-type" class="mb-2">
+                    <option value="">Select</option>
+                    <option value="integer">Integer</option>
+                    <option value="string">String</option>
+                    <option value="date">Date</option>
+                    <option value="boolean">Boolean</option>
+                </select>
+            </div>
 
-        <label for="filter-condition" class="block">Filter Condition:</label>
-        <select id="filter-condition" name="filter-condition" class="mb-2">
-           
-        </select>
+            <div class="form-group">
+                <label for="column-name">Column Name:</label>
+                <select id="column-name" name="column-name" class="mb-2">
+              
+                </select>
+            </div>
 
-        <input type="text" id="filter-value" name="filter-value" class="mb-2" placeholder="Enter value(s)" />
+            <div class="form-group">
+                <label for="filter-condition">Filter Condition:</label>
+                <select id="filter-condition" name="filter-condition" class="mb-2">
+              
+                </select>
+            </div>
 
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Apply Filter</button>
+            <div class="form-group">
+                <label for="filter-value">Filter Value:</label>
+                <input type="text" id="filter-value" name="filter-value" class="mb-2" placeholder="Enter value(s)" />
+            </div>
+
+            <div class="form-group">
+                <label for="sort-by">Sort By:</label>
+                <select id="sort-by" name="sort-by" class="mb-2">
+                    <option value="">Select</option>
+                    <option value="asc">A to Z / 0 to 9</option>
+                    <option value="desc">Z to A / 9 to 0</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 apply-button">Apply</button>
     </form>
-
 
     <table class="min-w-full bg-white border border-gray-200 mt-4">
         <thead>
             <tr class="border-b">
-                <th class="py-2 px-4">ID</th>
-                <th class="py-2 px-4">Name</th>
-                <th class="py-2 px-4">Age</th>
-                <th class="py-2 px-4">Role</th>
-                <th class="py-2 px-4">Hire Date</th>
-                <th class="py-2 px-4">Active</th>
-                <th class="py-2 px-4">Salary</th>
-                <th class="py-2 px-4">Department</th>
-                <th class="py-2 px-4">Projects Completed</th>
-                <th class="py-2 px-4">Last Login</th>
-                <th class="py-2 px-4">Access Level</th>
+                <th class="py-2 px-4" onclick="sortTable('id')">ID</th>
+                <th class="py-2 px-4" onclick="sortTable('name')">Name</th>
+                <th class="py-2 px-4" onclick="sortTable('age')">Age</th>
+                <th class="py-2 px-4" onclick="sortTable('role')">Role</th>
+                <th class="py-2 px-4" onclick="sortTable('hireDate')">Hire Date</th>
+                <th class="py-2 px-4" onclick="sortTable('isActive')">Active</th>
+                <th class="py-2 px-4" onclick="sortTable('salary')">Salary</th>
+                <th class="py-2 px-4" onclick="sortTable('department')">Department</th>
+                <th class="py-2 px-4" onclick="sortTable('projectsCompleted')">Projects Completed</th>
+                <th class="py-2 px-4" onclick="sortTable('lastLogin')">Last Login</th>
+                <th class="py-2 px-4" onclick="sortTable('accessLevel')">Access Level</th>
             </tr>
         </thead>
         <tbody>
@@ -72,5 +97,12 @@
     </table>
 
     <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+    <script>
+        function sortTable(column) {
+            const currentSort = new URLSearchParams(window.location.search).get('sort-by');
+            const newSort = currentSort === 'asc' ? 'desc' : 'asc';
+            window.location.search = `?column-name=${column}&sort-by=${newSort}`;
+        }
+    </script>
 </body>
 </html>
