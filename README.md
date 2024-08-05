@@ -16,3 +16,39 @@ FilterR is a web application for displaying and manipulating data in a table for
 - **Libraries**:
   - Flask: Web framework
   - Jinja2: Templating engine
+
+
+## Installation
+
+1. **Clone the Repository**
+    ```bash
+    git clone [https://github.com/Ronak021/BlinkBrief.git](https://github.com/Ronak021/filterR.git)
+    ```
+
+2. **Navigate to the Project Directory**
+    ```bash
+    cd filterR
+    ```
+
+3. **Create a Virtual Enovironmennt**
+    ```bash
+    # install
+    pip install virtualenv
+
+    # create
+    virtualenv env
+
+    # activate
+    .\env\Scripts\activate.ps1
+    ```
+
+3. **Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+
+5. **Run the Application**:
+    ```bash
+    python .\app.py
+    ```
