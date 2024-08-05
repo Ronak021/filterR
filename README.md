@@ -15,7 +15,4 @@ FilterR is a web application for displaying and manipulating data in a table for
 - **Backend**: Flask (Python)
 - **Libraries**:
   - Flask: Web framework
-  - Flask-WTF: Form handling and validation
   - Jinja2: Templating engine
-  - Werkzeug: WSGI web application library
-  - python-dotenv: Environment variable management
