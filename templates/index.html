@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Table with Filters</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+<body class="p-8">
+    <h1 class="text-2xl font-bold mb-4">Data Table with Filters</h1>
+
+    <!-- Filter Form -->
+    <form id="filter-form" method="GET" action="/">
+        <label for="filter-type" class="block">Filter Type:</label>
+        <select id="filter-type" name="filter-type" class="mb-2">
+            <option value="">Select Filter Type</option>
+            <option value="integer">Integer</option>
+            <option value="string">String</option>
+            <option value="date">Date</option>
+            <option value="boolean">Boolean</option>
+        </select>
+
+        <label for="column-name" class="block">Column Name:</label>
+        <select id="column-name" name="column-name" class="mb-2">
+     
+        </select>
+
+        <label for="filter-condition" class="block">Filter Condition:</label>
+        <select id="filter-condition" name="filter-condition" class="mb-2">
+           
+        </select>
+
+        <input type="text" id="filter-value" name="filter-value" class="mb-2" placeholder="Enter value(s)" />
+
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Apply Filter</button>
+    </form>
+
+
+    <table class="min-w-full bg-white border border-gray-200 mt-4">
+        <thead>
+            <tr class="border-b">
+                <th class="py-2 px-4">ID</th>
+                <th class="py-2 px-4">Name</th>
+                <th class="py-2 px-4">Age</th>
+                <th class="py-2 px-4">Role</th>
+                <th class="py-2 px-4">Hire Date</th>
+                <th class="py-2 px-4">Active</th>
+                <th class="py-2 px-4">Salary</th>
+                <th class="py-2 px-4">Department</th>
+                <th class="py-2 px-4">Projects Completed</th>
+                <th class="py-2 px-4">Last Login</th>
+                <th class="py-2 px-4">Access Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+            <tr>
+                <td class="py-2 px-4">{{ item.id }}</td>
+                <td class="py-2 px-4">{{ item.name }}</td>
+                <td class="py-2 px-4">{{ item.age }}</td>
+                <td class="py-2 px-4">{{ item.role }}</td>
+                <td class="py-2 px-4">{{ item.hireDate }}</td>
+                <td class="py-2 px-4">{{ item.isActive }}</td>
+                <td class="py-2 px-4">{{ item.salary }}</td>
+                <td class="py-2 px-4">{{ item.department }}</td>
+                <td class="py-2 px-4">{{ item.projectsCompleted }}</td>
+                <td class="py-2 px-4">{{ item.lastLogin }}</td>
+                <td class="py-2 px-4">{{ item.accessLevel }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+</body>
+</html>
